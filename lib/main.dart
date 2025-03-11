@@ -1,41 +1,94 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Application name
-      title: 'Flutter Hello World',
-      // Application theme data, you can set the colors for the application as
-      // you want
-      theme: ThemeData(
-        // useMaterial3: false,
-        primarySwatch: Colors.blue,
-      ),
-      // A widget which will be started on application startup
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  final String title;
-  const MyHomePage({super.key, required this.title});  
+  final List<Map<String, dynamic>> items = [
+    {"icon": Icons.directions_bike, "text": "bike"},
+    {"icon": Icons.directions_boat, "text": "boat"},
+    {"icon": Icons.directions_bus, "text": "bus"},
+    {"icon": Icons.directions_car, "text": "car"},
+    {"icon": Icons.train, "text": "railway"},
+    {"icon": Icons.directions_run, "text": "run"},
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // The title text which will be shown on the action bar
-        title: Text(title),
+        title: Text("Examen de Eliziel 1159"),
+        backgroundColor: Colors.teal,
+      ),
+      body: ListView(
+        children: items.map((item) {
+          return _buildListItem(context, item["icon"], item["text"]);
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, IconData icon, String text) {
+    return Card(
+      child: ListTile(
+        leading: Icon(icon, color: Colors.grey),
+        title: Text(text),
+        onTap: () {
+          // Navegar a una nueva pantalla
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailScreen(text: text, icon: icon),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  final String text;
+  final IconData icon;
+
+  DetailScreen({required this.text, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Detalles de $text"),
+        backgroundColor: Colors.teal,
       ),
       body: Center(
-        child: Text(
-          'Hello, World!',
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 100, color: Colors.teal),
+            SizedBox(height: 20),
+            Text(
+              "Has seleccionado: $text",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Volver"),
+            ),
+          ],
         ),
       ),
     );
